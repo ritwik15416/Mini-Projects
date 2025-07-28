@@ -1,0 +1,129 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+import customtkinter
+
+
+# --------- Functions ----------
+
+def calculate_si_ci():
+    try:
+        principal = float(principal_entry.get())
+        rate = float(rate_entry.get())
+        time = float(time_entry.get())
+
+        if interest_type.get() == "Simple Interest":
+            si = (principal * rate * time) / 100
+            amount = principal + si
+            result_si_ci.config(text=f"Simple Interest: ₹{si:.2f}\nTotal Amount: ₹{amount:.2f}")
+        else:
+            ci = principal * ((1 + rate / 100) ** time) - principal
+            amount = principal + ci
+            result_si_ci.config(text=f"Compound Interest: ₹{ci:.2f}\nTotal Amount: ₹{amount:.2f}")
+
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Enter valid numeric values.")
+
+
+def calculate_emi():
+    try:
+        loan = float(loan_entry.get())
+        annual_rate = float(emi_rate_entry.get())
+        years = float(emi_time_entry.get())
+        si_interest = loan * annual_rate * years/100
+        si_amount = loan + si_interest
+        monthly_rate = annual_rate / (12 * 100)
+        months = years * 12
+
+        emi = (loan * monthly_rate * ((1 + monthly_rate) ** months)) / (((1 + monthly_rate) ** months) - 1)
+        total_payment = emi * months
+        total_interest = total_payment - loan
+        
+        if interest_type.get() == "Simple Interest":
+            result_emi.config(text=f"EMI: ₹{si_interest:.2f}\nTotal Payment: ₹{si_amount:.2f}\nTotal Interest: ₹{si_interest:.2f}")
+        else:
+            result_emi.config(text=f"EMI: ₹{emi:.2f}\nTotal Payment: ₹{total_payment:.2f}\nTotal Interest: ₹{total_interest:.2f}")
+    except ValueError:
+        messagebox.showerror("Invalid Input", "Enter valid numeric values.")
+
+
+def on_enter(e):
+    e.widget.config(bg="#005f99")
+
+
+def on_leave(e):
+    e.widget.config(bg="#007acc")
+
+
+# --------- Main Window ----------
+root = tk.Tk()
+root.title("Interest Calculator")
+root.geometry("480x400")
+root.resizable(False, False)
+root.configure(bg="#f0f0f0")
+
+style = ttk.Style()
+style.configure("TNotebook.Tab", font=('Helvetica', 11, 'bold'))
+style.configure("TLabel", background="#f0f0f0", font=("Helvetica", 10))
+style.configure("TEntry", padding=5)
+style.configure("TButton", padding=5)
+
+# Notebook (tabs)
+notebook = ttk.Notebook(root)
+notebook.pack(pady=10, expand=True, fill='both')
+
+# --------- Tab 1: SI / CI Calculator ----------
+tab1 = ttk.Frame(notebook)
+notebook.add(tab1, text="Interest")
+
+tk.Label(tab1, text="Principal (₹):").grid(row=0, column=0, padx=10, pady=10, sticky="w")
+principal_entry = tk.Entry(tab1, width=25)
+principal_entry.grid(row=0, column=1, padx=10, pady=10)
+
+tk.Label(tab1, text="Rate (% per annum):").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+rate_entry = tk.Entry(tab1, width=25)
+rate_entry.grid(row=1, column=1, padx=10, pady=10)
+
+tk.Label(tab1, text="Time (in years):").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+time_entry = tk.Entry(tab1, width=25)
+time_entry.grid(row=2, column=1, padx=10, pady=10)
+
+tk.Label(tab1, text="Type:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
+interest_type = ttk.Combobox(tab1, values=["Simple Interest", "Compound Interest"], state="readonly", width=22)
+interest_type.set("Simple Interest")
+interest_type.grid(row=3, column=1, padx=10, pady=10)
+
+btn_calculate_si_ci = tk.Button(tab1, text="Calculate", bg="#007acc", fg="white", borderwidth=5, font=("Helvetica", 11,'bold'),
+                                command=calculate_si_ci)
+btn_calculate_si_ci.grid(row=4, columnspan=2, pady=15)
+btn_calculate_si_ci.bind("<Enter>", on_enter)
+btn_calculate_si_ci.bind("<Leave>", on_leave)
+
+result_si_ci = tk.Label(tab1, text="", font=("Helvetica", 11), bg="#f0f0f0", justify="center")
+result_si_ci.grid(row=5, columnspan=2, pady=10)
+
+# --------- Tab 2: EMI Calculator ----------
+tab2 = ttk.Frame(notebook)
+notebook.add(tab2, text="EMI")
+
+tk.Label(tab2, text="Loan Amount (₹):").grid(row=0, column=0, padx=10, pady=10, sticky="w")
+loan_entry = tk.Entry(tab2, width=25)
+loan_entry.grid(row=0, column=1, padx=10, pady=10)
+
+tk.Label(tab2, text="Interest Rate (% p.a.):").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+emi_rate_entry = tk.Entry(tab2, width=25)
+emi_rate_entry.grid(row=1, column=1, padx=10, pady=10)
+
+tk.Label(tab2, text="Time (years):").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+emi_time_entry = tk.Entry(tab2, width=25)
+emi_time_entry.grid(row=2, column=1, padx=10, pady=10)
+
+btn_calculate_emi = tk.Button(tab2, text="Calculate", bg="#007acc", fg="white", borderwidth=5, font=("Helvetica", 11,"bold"),
+                              command=calculate_emi)
+btn_calculate_emi.grid(row=3, columnspan=2, pady=15)
+btn_calculate_emi.bind("<Enter>", on_enter)
+btn_calculate_emi.bind("<Leave>", on_leave)
+
+result_emi = tk.Label(tab2, text="", font=("Helvetica", 11), bg="#f0f0f0", justify="left")
+result_emi.grid(row=4, columnspan=2, pady=10)
+
+root.mainloop()
