@@ -6,3 +6,5 @@
 * play function doesn't take any parameters. It asks how many games the player wants to play and starts the game loop. At the end, winner is declared (if not a draw) along with the margin of points. replay function is called inside this play() function.
 * At the end, play() function is called.
 
+# Interest-and-EMI-Calculator
+* Coming soon....
