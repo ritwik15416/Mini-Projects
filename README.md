@@ -7,4 +7,6 @@
 * At the end, play() function is called.
 
 # Interest-and-EMI-Calculator
-* Coming soon....
+* It calculates simple and compound interest for an invested amount, rate of interest, and time period. 
+* For loans, it calculates the EMI (Equated Monthly Installment) provided the loan amount, rate of interest, and time period.
+* It graphically represents the principal and interest components of the total amount in both cases.    
